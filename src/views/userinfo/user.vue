@@ -8,7 +8,11 @@
             {{ userInfo.nickname }}
           </span>
         </div>
-        <div class="use_r"><router-link to="/information" class="home-header-serch">编辑资料</router-link></div>
+        <div class="use_r">
+          <router-link to="/edit" class="home-header-serch"
+            >编辑资料</router-link
+          >
+        </div>
       </div>
       <div class="use_b">
         <div class="use_b_l">
@@ -26,14 +30,28 @@
       <div>
         <img class="mobile" src="@/assets/tel.png" />
       </div>
-      <div class="text"><span @click="loginzi">登录</span> / <span @click="regzi">注册</span></div>
+      <div class="text">
+        <span @click="loginzi">登录</span> / <span @click="regzi">注册</span>
+      </div>
     </div>
     <!-- <div class="grrr"></div> -->
 
     <div class="grid">
       <van-grid clickable :column-num="2">
-        <van-grid-item to="/ls"><van-icon name="star-o" size="20" color="#f27f98" />收藏</van-grid-item>
-        <van-grid-item to=""> <van-icon size="20" color="#f27f98" name="underway-o" />历史</van-grid-item>
+        <van-grid-item to="/ls"
+          ><van-icon
+            name="star-o"
+            size="20"
+            color="#f27f98"
+          />收藏</van-grid-item
+        >
+        <van-grid-item to="">
+          <van-icon
+            size="20"
+            color="#f27f98"
+            name="underway-o"
+          />历史</van-grid-item
+        >
       </van-grid>
     </div>
     <div class="cell">
@@ -41,19 +59,17 @@
       <van-cell title="联系我们" is-link />
       <van-cell title="关于我们" is-link />
     </div>
-    <van-button type="primary" block>注销账号</van-button>
+    <van-button v-if="isLogin" type="primary" @click="out" block
+      >退出登录</van-button
+    >
     <BomViem></BomViem>
   </div>
 </template>
 <script>
-import BomViem from "../components/BomViem.vue";
+import BomViem from "../../components/BomViem.vue";
 import { mapState, mapMutations } from "vuex";
 import Vue from "vue";
-// import BomViem from "../components/BomViem.vue";
-import { Grid, GridItem } from "vant";
-import { Icon } from "vant";
-import { Cell, CellGroup } from "vant";
-
+import { Grid, GridItem, Cell, CellGroup, Dialog, Icon } from "vant";
 Vue.use(Cell);
 Vue.use(CellGroup);
 Vue.use(Icon);
@@ -66,28 +82,50 @@ export default {
       return this.$store.state.uid;
     },
     //相当于封装一个函数传入一个数组，返回值为一个对象(放的是处理的数组形成的方法)...解构对象把方法放到计算属性里类似上面写法
-    ...mapState(["uid", "token", "isLogin", "userInfo"]),
+    ...mapState([
+      "uid",
+      "token",
+      "isLogin",
+      "userInfo",
+      "publish_num",
+      "liked_num",
+    ]),
   },
   data() {
     return {
       // userInfo: {},
-      publish_num: 0,
-      liked_num: 0,
+      // publish_num: 0,
+      // liked_num: 0,
     };
   },
   methods: {
+    //退出登录
+    out() {
+      Dialog.confirm({
+        title: "提示",
+        message: "您确定退出登录嘛",
+      })
+        .then(() => {
+          this.remove();
+          localStorage.clear();
+        })
+        .catch(() => {
+          return;
+        });
+    },
     // ...mapMutations(["clear"]),
+    remove() {
+      this.$store.commit("clear");
+    },
     loginzi() {
       this.$router.push("/login");
     },
     regzi() {
       this.$router.push("/reg");
     },
-    remove() {
-      this.$store.commit("clear");
-    },
+
     tiao() {
-      this.$router.push("/mima");
+      this.$router.push("/change");
     },
   },
 
@@ -98,6 +136,7 @@ export default {
     [Icon.name]: Icon,
     [Cell.name]: Cell,
     [CellGroup.anme]: CellGroup,
+    [Dialog.Component.name]: Dialog.Component,
   },
 };
 </script>
@@ -113,7 +152,7 @@ export default {
   }
   .user_t {
     height: 120px;
-    background: green;
+    background: url("@/assets/banner.jpg") no-repeat;
     // img {
     //   width: 46px;
     //   height: 46px;

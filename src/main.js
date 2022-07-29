@@ -12,6 +12,7 @@ import "@/components/vant";
 // Vue.prototype.$http = axios;
 
 //定义全局的颜色变量  less里的只能在css里使用
+//vue的混入
 Vue.mixin({
   data() {
     return {
@@ -24,6 +25,7 @@ let token = localStorage.getItem("token");
 if (!token) {
   //你是第一次进来，原来没登陆过
   //自己玩去
+  router.push("/login");
 } else {
   //有token说明原来登陆过
   //拿着token可以去请求数据

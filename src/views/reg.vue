@@ -78,7 +78,7 @@ export default {
     },
     //注册
     onSubmit(values) {
-      console.log("submit", values);
+      // console.log("submit", values);
       reg(values)
         .then((res) => {
           console.log(res);

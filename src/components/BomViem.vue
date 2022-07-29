@@ -9,9 +9,7 @@
         </template>
       </van-tabbar-item>
       <van-tabbar-item replace to="/user"
-        >我的
-        <template #icon>
-          <van-icon name="manager-o" /> </template
+        >我的 <template #icon> <van-icon name="manager-o" /> </template
       ></van-tabbar-item>
     </van-tabbar>
   </div>
@@ -21,7 +19,7 @@ export default {
   components: {},
   data() {
     return {
-      // active: 0,
+      active: 0,
     };
   },
 };

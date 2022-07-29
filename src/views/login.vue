@@ -33,34 +33,44 @@
 </template>
 
 <script>
-import { login } from "@/api/home.js";
+import { login } from '@/api/home.js';
 
 export default {
   data() {
     return {
-      username: "",
-      password: "",
+      username: '',
+      password: '',
     };
   },
   methods: {
     //登录
     onSubmit(values) {
-      console.log("submit", values);
+      // console.log("submit", values);
       login(values)
         .then((res) => {
           // console.log(res);
 
-          this.$router.push("/user");
-          localStorage.setItem("username", res.username);
-          localStorage.setItem("uid", res.uid);
-          localStorage.setItem("token", res.token);
-          localStorage.setItem("userInfo", JSON.stringify(res.userInfo));
-          // 存到vuex
-          let { token, userInfo, uid } = res;
-          this.$store.commit("change", { key: "token", value: token });
-          this.$store.commit("change", { key: "userInfo", value: userInfo });
-          this.$store.commit("change", { key: "uid", value: uid });
-          this.$store.commit("change", { key: "isLogin", value: true });
+          if (res.code == 0) {
+            let { token } = res;
+            localStorage.setItem('username', res.username);
+            localStorage.setItem('uid', res.uid);
+            localStorage.setItem('token', res.token);
+            localStorage.setItem('userInfo', JSON.stringify(res.userInfo));
+            // 存到vuex
+            // let { token, userInfo, uid } = res;
+            // this.$store.commit("change", { key: "token", value: token });
+            // this.$store.commit("change", { key: "userInfo", value: userInfo });
+            // this.$store.commit("change", { key: "uid", value: uid });
+            this.$store.commit('change', { key: 'isLogin', value: true });
+            //直接方法替代
+            this.$store.dispatch('getUserInfo', token);
+
+            setTimeout(() => {
+              this.$router.push('/user');
+            }, 1000);
+          } else {
+            this.$toast(res.msg);
+          }
         })
         .catch((err) => {});
     },

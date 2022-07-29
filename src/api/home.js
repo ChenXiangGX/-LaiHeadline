@@ -36,3 +36,6 @@ export function delete_user(params) {
 export function getUserInfo(params) {
   return axios.post("/user/getuserInfo", params);
 }
+export function editUserInfo(params) {
+  return axios.post("/user/editUserInfo", params);
+}

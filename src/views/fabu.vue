@@ -38,12 +38,18 @@
       </van-field>
 
       <div style="margin: 16px">
-        <van-button round block type="info" native-type="submit">提交</van-button>
+        <van-button round block type="info" native-type="submit"
+          >提交</van-button
+        >
       </div>
     </van-form>
 
     <!--   弹出层 -->
-    <van-popup v-model="catePickerShow" position="bottom" :style="{ height: '40%' }">
+    <van-popup
+      v-model="catePickerShow"
+      position="bottom"
+      :style="{ height: '40%' }"
+    >
       <van-picker
         title="请选择"
         show-toolbar
@@ -62,8 +68,9 @@
 import BomViem from "@/components/BomViem.vue";
 import { Form } from "vant";
 import { Field, Picker, Popup } from "vant";
-import { addArticle, getUploadToken, uploadQiniu } from "@/api/qiniu/api";
+import { addArticle } from "@/api/qiniu/api";
 import { mapState } from "vuex";
+import { mapActions } from "vuex";
 import { Uploader } from "vant";
 export default {
   name: "publish",
@@ -78,7 +85,6 @@ export default {
   },
   data() {
     return {
-      activee: 1,
       title: "",
       content: "",
       cate_id: "",
@@ -94,6 +100,7 @@ export default {
     this.$store.dispatch("getCate");
   },
   methods: {
+    ...mapActions(["upload"]),
     //  picker确定
     onConfirm(e) {
       // console.log(e);
@@ -101,48 +108,7 @@ export default {
       this.cate_name = e.name;
       this.cate_id = e._id;
     },
-    ///  上传
-    async upload(fileList) {
-      let imageSrc = [];
-      if (!fileList || fileList.length === 0) {
-        //  没上传图片
-        return imageSrc;
-      }
 
-      // 需要 循环
-      //  多个异步任务都执行完成  返回他们完成后的结果
-      let task = fileList.map((v) => {
-        return new Promise(async (resolve, reject) => {
-          let { file } = v;
-          let { type } = file;
-          //  拿到类型  比如jpg image/jpg
-          type = type.split("/")[1];
-          // 重新命名  随机名字
-          let file_name = `${new Date().getTime()}_${Math.random().toString(36).slice(2)}.${type}`;
-          // 去服务器申请一个上传token
-          console.log(1);
-          let { token } = await getUploadToken();
-
-          console.log(token);
-
-          const formdata = new FormData();
-          formdata.append("file", file);
-          formdata.append("token", token);
-          formdata.append("key", file_name);
-
-          uploadQiniu(formdata).then((res) => {
-            console.log(res);
-            resolve(`http://toutiao.longxiaokj.com/` + res.key);
-          });
-        });
-      });
-
-      // task  [promises,promise]
-
-      imageSrc = await Promise.all(task);
-
-      return imageSrc;
-    },
     async onSubmit(values) {
       // console.log("submit", values);
 
@@ -168,6 +134,7 @@ export default {
       let imageSrc = await this.upload(fileList);
 
       console.log(imageSrc);
+      //为一个对象，里面除了接口所需的参数外话多个vant上传图片的filelist
       delete values.fileList;
       addArticle({
         ...values,
