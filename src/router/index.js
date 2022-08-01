@@ -67,6 +67,30 @@ const routes = [
     name: 'forget',
     component: () => import(/* webpackChunkName: "about" */ '../views/forget/forget.vue'),
   },
+  // 搜索
+  {
+    path: '/search',
+    name: 'search',
+    component: () => import(/* webpackChunkName: "about" */ '../views/search/search.vue'),
+  },
+  //搜索列表页
+  {
+    path: '/seachList',
+    name: 'seachList',
+    component: () => import(/* webpackChunkName: "about" */ '../views/search/list.vue'),
+  },
+  //详情页
+  {
+    path: '/artice',
+    name: 'artice',
+    component: () => import(/* webpackChunkName: "about" */ '../views/artice/article.vue'),
+  },
+  //收藏
+  {
+    path: '/collection',
+    name: 'collection',
+    component: () => import(/* webpackChunkName: "about" */ '../views/collection/collection.vue'),
+  },
 ];
 
 const router = new VueRouter({

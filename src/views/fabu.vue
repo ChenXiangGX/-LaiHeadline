@@ -38,18 +38,12 @@
       </van-field>
 
       <div style="margin: 16px">
-        <van-button round block type="info" native-type="submit"
-          >提交</van-button
-        >
+        <van-button round block type="info" native-type="submit">提交</van-button>
       </div>
     </van-form>
 
     <!--   弹出层 -->
-    <van-popup
-      v-model="catePickerShow"
-      position="bottom"
-      :style="{ height: '40%' }"
-    >
+    <van-popup v-model="catePickerShow" position="bottom" :style="{ height: '40%' }">
       <van-picker
         title="请选择"
         show-toolbar
@@ -65,15 +59,15 @@
 </template>
 
 <script>
-import BomViem from "@/components/BomViem.vue";
-import { Form } from "vant";
-import { Field, Picker, Popup } from "vant";
-import { addArticle } from "@/api/qiniu/api";
-import { mapState } from "vuex";
-import { mapActions } from "vuex";
-import { Uploader } from "vant";
+import BomViem from '@/components/BomViem.vue';
+import { Form } from 'vant';
+import { Field, Picker, Popup } from 'vant';
+import { addArticle } from '@/api/qiniu/api';
+import { mapState } from 'vuex';
+import { mapActions } from 'vuex';
+import { Uploader } from 'vant';
 export default {
-  name: "publish",
+  name: 'publish',
   components: {
     BomViem,
 
@@ -85,22 +79,22 @@ export default {
   },
   data() {
     return {
-      title: "",
-      content: "",
-      cate_id: "",
-      cate_name: "",
+      title: '',
+      content: '',
+      cate_id: '',
+      cate_name: '',
       catePickerShow: false,
       fileList: [], //  vant上传组件 接收数据
     };
   },
   computed: {
-    ...mapState(["cate", "uid", "userInfo"]),
+    ...mapState(['cate', 'uid', 'userInfo']),
   },
   created() {
-    this.$store.dispatch("getCate");
+    this.$store.dispatch('getCate');
   },
   methods: {
-    ...mapActions(["upload"]),
+    ...mapActions(['upload']),
     //  picker确定
     onConfirm(e) {
       // console.log(e);
@@ -121,9 +115,9 @@ export default {
 
       // 需要把file传到服务器  服务器收到以后存到服务器上 返回该图片在服务器的地址
       if (!uid) {
-        this.$toast("请先登录");
+        this.$toast('请先登录');
         setTimeout((v) => {
-          this.$router.push("/login");
+          this.$router.push('/login');
         }, 500);
         return;
       }

@@ -1,26 +1,15 @@
 <template>
-  <div class="Home">
-    <TopView></TopView>
-
-    <!-- 顶部标签栏 -->
-    <van-tabs v-model="active" @click="switchtab">
-      <van-tab v-for="item in list" :key="item._id" :title="'' + item.name"></van-tab>
-    </van-tabs>
+  <div class="list">
+    <van-nav-bar fixed title="搜索列表页" left-arrow @click-left="$router.back()" />
 
     <div class="box" style="padding-bottom: 50px">
       <ul>
         <van-pull-refresh v-model="isRefresh" @refresh="onRefresh">
-          <van-list
-            v-model="loading"
-            :finished="finished"
-            :immediate-check="false"
-            finished-text="没有更多了"
-            @load="get_article_list"
-          >
+          <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getList">
             <!-- immediate-check是因为默认为true直接执行一次 -->
             <li
               class="box"
-              v-for="(item, index) in lists"
+              v-for="(item, index) in list"
               :key="index"
               @click="
                 $router.push({
@@ -78,31 +67,15 @@
         </van-pull-refresh>
       </ul>
     </div>
-    <BomViem></BomViem>
   </div>
 </template>
 
 <script>
-import BomViem from '../components/BomViem.vue';
-import TopView from '../components/TopView.vue';
 import { List, PullRefresh } from 'vant';
-import Vue from 'vue';
-import { Tabbar, TabbarItem } from 'vant';
-Vue.use(Tabbar);
-Vue.use(TabbarItem);
-
-// 顶部标签栏Tab
-import { Tab, Tabs } from 'vant';
-import { get_cate_list, get_article_list } from '@/api/home.js';
-
+import { search } from '@/api/home.js';
 export default {
-  name: 'HomeFirst',
   data() {
     return {
-      active: 0,
-      list: [], //存放分类数据的
-      lists: [],
-      stry: '',
       //下拉加载
       loading: false,
       //数据是否全部加载完成
@@ -112,18 +85,10 @@ export default {
       limit: 10,
 
       isRefresh: false,
+      list: [],
+
+      key_word: '',
     };
-  },
-  components: {
-    BomViem,
-    TopView,
-    [Tab.name]: Tab,
-    [Tabs.name]: Tabs,
-    [List.name]: List,
-    [PullRefresh.name]: PullRefresh,
-  },
-  mounted() {
-    this.getitem();
   },
   filters: {
     formatDate: function (value) {
@@ -141,88 +106,61 @@ export default {
       }
     },
   },
+  created() {
+    // console.log(this.$route.query.key_word);
+    this.key_word = this.$route.query.key_word;
+  },
+  components: {
+    [List.name]: List,
+    [PullRefresh.name]: PullRefresh,
+  },
   methods: {
-    onRefresh() {
-      this.lists = [];
-      this.skip = 0;
-      this.finished = false;
-      this.get_article_list(true);
-    },
-    //切换tab
-    switchtab() {
-      this.stry = this.list[this.active]._id;
-      this.lists = [];
-      this.skip = 0;
-      this.finished = false;
-      this.get_article_list();
-    },
-    get_article_list(flag) {
-      let { stry, skip, limit } = this;
-      get_article_list({
-        cate_id: stry,
-        skip,
+    getList(flag) {
+      let { key_word, limit, skip } = this;
+      search({
+        key_word,
         limit,
-      }).then((res) => {
-        // console.log(res);
-        //toutiao.longxiaokj.com/
-
-        if (flag) {
-          this.isRefresh = false;
-          res.data.forEach((aa, i) => {
-            if (aa.imageSrc.length > 0) {
-              this.lists.push(aa);
+        skip,
+      })
+        .then((res) => {
+          // console.log(res);
+          if (res.code == 0) {
+            if (flag) {
+              this.list = res.data;
+              this.isRefresh = false;
+            } else {
+              this.list.push(...res.data);
             }
-          });
-        } else {
-          this.lists.push(...res.data);
-          // res.data.forEach((aa, i) => {
-          //   if (aa.imageSrc.length > 0) {
-          //     aa.imageSrc.forEach((cc) => {
-          //       if (!cc.includes(' ') && cc.includes('http://toutiao.longxiaokj.com/')) {
-          //         this.lists.push(aa);
-          //       }
-          //     });
-          //   }
-          // });
-        }
 
-        let len = this.lists.length;
+            let len = this.list.length;
 
-        if (len >= res.count) {
-          this.finished = true;
-        } else {
-          this.skip = len; //skip更新
-          this.loading = false;
-        }
-      });
+            if (len >= res.count) {
+              this.finished = true;
+            } else {
+              this.loading = false;
+              this.skip = len;
+            }
+          }
+        })
+        .catch((err) => {});
     },
-    getitem() {
-      get_cate_list().then((res) => {
-        this.list = res.data;
-        this.stry = this.list[this.active]._id;
-        this.get_article_list();
-      });
-    },
-    wenzhang() {
-      this.$router.push('/Wzdetail');
+    onRefresh() {
+      this.skip = 0;
+      this.finished = false;
+      this.getList(true);
     },
   },
 };
 </script>
 
 <style lang="less">
-.Home {
-  width: 375px;
-
-  .van-nav-bar__placeholder {
-    height: 46.0125px !important;
-  }
-
+.list {
   div.box {
     // width: 100%;
     // height: 100px;
     ul {
       .van-list {
+        margin-top: 50px;
         display: flex;
         flex-wrap: wrap;
         width: 375px;

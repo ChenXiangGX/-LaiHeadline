@@ -25,6 +25,7 @@
           { validator: (e) => /^\w{6,12}$/.test(e), message: '密码格式错误' },
         ]"
       />
+      <div class="mima_r"><router-link to="/forget">忘记密码</router-link></div>
       <div style="margin: 16px">
         <van-button round block type="info" native-type="submit">提交</van-button>
       </div>
@@ -66,7 +67,7 @@ export default {
             this.$store.dispatch('getUserInfo', token);
 
             setTimeout(() => {
-              this.$router.push('/user');
+              this.$router.back();
             }, 1000);
           } else {
             this.$toast(res.msg);
@@ -85,6 +86,21 @@ export default {
 .login {
   .van-nav-bar__content {
     background-color: #07c160;
+  }
+  .mima_r {
+    a {
+      color: #1989fa;
+    }
+    text-align: right;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    // color: black;
+    .router-link-active {
+      color: rgb(218, 215, 215);
+      line-height: 20px;
+    }
   }
 }
 </style>
