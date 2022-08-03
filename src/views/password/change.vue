@@ -24,22 +24,20 @@
       />
       <div class="mima_r"><router-link to="/forget">忘记密码</router-link></div>
       <div style="margin: 16px">
-        <van-button round block type="info" native-type="submit"
-          >提交</van-button
-        >
+        <van-button round block type="info" native-type="submit">提交</van-button>
       </div>
     </van-form>
   </div>
 </template>
 
 <script>
-import Vue from "vue";
-import { Form } from "vant";
-import { Field } from "vant";
+import Vue from 'vue';
+import { Form } from 'vant';
+import { Field } from 'vant';
 
-import { Toast } from "vant";
+import { Toast } from 'vant';
 // import { changePassword } from "@/api/password/changePassword";
-import { changeword } from "@/api/password/changeword";
+import { changeword } from '@/api/password/changeword';
 
 Vue.use(Toast);
 Vue.use(Form);
@@ -47,16 +45,16 @@ Vue.use(Field);
 export default {
   data() {
     return {
-      oldPassword: "",
-      newPassword: "",
-      uid: "",
+      oldPassword: '',
+      newPassword: '',
+      uid: '',
     };
   },
 
   watch: {
     //监听这个指定的值的变化
     // 让值最初时候watch就执行就用到了handler和immediate属性
-    "$store.state.uid": {
+    '$store.state.uid': {
       immediate: true,
       handler(n, o) {
         // console.log(n);
@@ -82,7 +80,7 @@ export default {
           if (res.code == 0) {
             this.$toast(res.msg);
             setTimeout(() => {
-              this.$router.push("/login");
+              this.$router.push('/login');
             }, 1000);
           } else {
             this.$toast(res.msg);
@@ -94,10 +92,19 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .mima {
-  .van-nav-bar__content {
-    background-color: #07c160;
+  // .van-nav-bar__content {
+  //   background-color: #07c160;
+  // }
+  ::v-deep .van-nav-bar {
+    background-color: #3288de;
+  }
+  ::v-deep .van-nav-bar .van-icon {
+    color: black;
+  }
+  ::v-deep .van-nav-bar__text {
+    color: black;
   }
   .mima_r {
     a {

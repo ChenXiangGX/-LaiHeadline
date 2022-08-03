@@ -90,6 +90,25 @@ const routes = [
     path: '/collection',
     name: 'collection',
     component: () => import(/* webpackChunkName: "about" */ '../views/collection/collection.vue'),
+  }, //历史
+  {
+    path: '/history',
+    name: 'history',
+    component: () => import(/* webpackChunkName: "about" */ '../views/history/history.vue'),
+    meta: {
+      keep: true,
+    },
+  },
+  //我的发布
+  {
+    path: '/myfabu',
+    name: 'myfabu',
+    component: () => import(/* webpackChunkName: "about" */ '../views/myfabu/myfabu.vue'),
+  }, //历史dev
+  {
+    path: '/favdev',
+    name: 'favdev',
+    component: () => import(/* webpackChunkName: "about" */ '../views/artice/favdev.vue'),
   },
 ];
 

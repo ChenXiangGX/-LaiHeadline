@@ -110,8 +110,17 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .ls {
+  ::v-deep .van-nav-bar {
+    background-color: #3288de;
+  }
+  ::v-deep .van-nav-bar .van-icon {
+    color: black;
+  }
+  ::v-deep .van-nav-bar__text {
+    color: black;
+  }
   div.box {
     width: 100%;
     // height: 100px;

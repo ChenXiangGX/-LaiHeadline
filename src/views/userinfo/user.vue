@@ -35,10 +35,11 @@
     <div class="grid">
       <van-grid clickable :column-num="2">
         <van-grid-item to="/collection"><van-icon name="star-o" size="20" color="#f27f98" />收藏</van-grid-item>
-        <van-grid-item to=""> <van-icon size="20" color="#f27f98" name="underway-o" />历史</van-grid-item>
+        <van-grid-item to="/history"> <van-icon size="20" color="#f27f98" name="underway-o" />历史</van-grid-item>
       </van-grid>
     </div>
     <div class="cell">
+      <van-cell title="我的发布" to="/myfabu" is-link />
       <van-cell class="cell" @click="tiao" title="修改密码" is-link />
       <van-cell title="联系我们" is-link />
       <van-cell title="关于我们" is-link />
@@ -115,8 +116,17 @@ export default {
   },
 };
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .user {
+  height: 100vh;
+
+  ::v-deep .van-button--primary {
+    background-color: #fff;
+    border: 1px solid #fff;
+    color: black;
+    // padding-bottom: 10px;
+  }
+
   width: 375px;
   background-color: #f5f7f9;
   .grid {
@@ -127,7 +137,7 @@ export default {
   }
   .user_t {
     height: 120px;
-    background: url('@/assets/banner.jpg') no-repeat;
+    background: url('@/assets/333.jpg') no-repeat;
     // img {
     //   width: 46px;
     //   height: 46px;
@@ -155,20 +165,26 @@ export default {
           background-color: #fff;
           border-radius: 30px;
         }
+        span {
+          margin-left: 17px;
+          color: skyblue;
+        }
       }
       .use_r {
         .home-header-serch {
           // color: #fff;
           display: inline-block;
           padding: 3px 10px;
-          border-radius: 9px;
-          background-color: #42a123;
+          // background-color: #42a123;
+        }
+        a {
+          color: skyblue;
         }
         span {
           display: inline-block;
           padding: 3px 10px;
           border-radius: 9px;
-          background-color: #fff;
+          // background-color: #fff;
         }
       }
     }
@@ -189,7 +205,7 @@ export default {
   }
   .not-login {
     height: 180px;
-    background: url('@/assets/banner.jpg') no-repeat;
+    background: url('@/assets/333.jpg') no-repeat;
     background-size: cover;
     display: flex;
     flex-direction: column;

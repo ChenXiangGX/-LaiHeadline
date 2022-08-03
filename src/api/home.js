@@ -89,3 +89,15 @@ export function get_fav_list(params) {
 export function get_reply_list(params) {
   return axios.post('/api/get_reply_list', params);
 }
+//历史记录
+
+export function get_history_list(params) {
+  return axios.post('/api/get_history_list', params);
+} //我的发布
+export function get_user_article_list(params) {
+  return axios.post('/api/get_user_article_list', params);
+}
+//删除发布
+export function del_user_article(params) {
+  return axios.post('/api/del_user_article', params);
+}

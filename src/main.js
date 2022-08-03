@@ -15,6 +15,9 @@ import '@/components/vant';
 let windowHeight = document.documentElement.scrollHeight;
 //定义全局的颜色变量  less里的只能在css里使用
 //vue的混入
+
+import mixin from '@/comon/mixins'; // 全局混入
+Vue.mixin(mixin);
 Vue.mixin({
   data() {
     return {
@@ -38,6 +41,8 @@ Vue.mixin({
 });
 
 let token = localStorage.getItem('token');
+let tokenExpired = localStorage.getItem('tokenExpired');
+
 // if (!token) {
 //   //你是第一次进来，原来没登陆过
 //   //自己玩去
@@ -55,18 +60,13 @@ let token = localStorage.getItem('token');
 // }).$mount("#app");
 
 //在文章详情页，同步请求，这边用户请求还没完成，致使用户id没有，is_like等属性就没有
-if (token) {
-  store.dispatch('getUserInfo', token).then((res) => {
-    new Vue({
-      router,
-      store,
-      render: (h) => h(App),
-    }).$mount('#app');
-  });
-} else {
-  new Vue({
-    router,
-    store,
-    render: (h) => h(App),
-  }).$mount('#app');
-}
+import init from '@/comon/init'; //  登录态维护
+const app = new Vue({
+  router,
+  store,
+  render: (h) => h(App),
+});
+
+init().then((res) => {
+  app.$mount('#app');
+});

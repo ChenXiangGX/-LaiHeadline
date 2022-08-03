@@ -1,5 +1,5 @@
 <template>
-  <div class="artice">
+  <div>
     <!-- 导航栏 -->
     <van-nav-bar left-text="返回" left-arrow @click-left="$router.back()">
       <template #title> 文章详情 </template>
@@ -54,7 +54,7 @@
                     class="reply-btn"
                     round
                     size="mini"
-                    @click.stop="PopupShow(1, item.info.nickname, item._id, item, index)"
+                    @click.stop="PopupShow(1, item.info.nickname, item._id, index)"
                     >{{ item.reply_num == 0 ? '' : item.reply_num }}回复</van-button
                   >
                 </div>
@@ -98,12 +98,17 @@
     <!--   /回复   -->
 
     <van-popup v-model="replyPopupShow" :overlay="false" position="bottom" style="height: 100%">
-      <replyCom
-        @close="replyPopupShow = false"
-        :replyPopupShow="replyPopupShow"
-        :replyInfo="replyInfo"
-        :commentList="commentList"
-      ></replyCom>
+      <replyCom :key="key" @close="replyPopupShow = false" :article_id="article_id" :replyInfo="replyInfo"> </replyCom>
+      <div class="article-bottom">
+        <van-button
+          class="comment-btn"
+          type="default"
+          round
+          size="small"
+          @click="PopupShow(1, replyInfo.info.nickname, replyInfo._id, reply_active_index)"
+          >回复</van-button
+        >
+      </div>
     </van-popup>
   </div>
 </template>
@@ -117,9 +122,8 @@ import { mapState } from 'vuex';
 import { Divider } from 'vant';
 import { Skeleton } from 'vant';
 import { addComment } from '@/api/home';
-import replyCom from './replyCom.vue';
+import replyCom from './replyComdev.vue';
 import '@/comon/utils/github-markdown.css';
-
 export default {
   data() {
     return {
@@ -136,6 +140,8 @@ export default {
       reply_comment_id: '', //  回复的id  这个数据作为中转
       replyPopupShow: false, //  回复的 弹出层
       replyInfo: {},
+      reply_active_index: 0,
+      key: 1,
     };
   },
   filters: {
@@ -154,6 +160,12 @@ export default {
       }
     },
   },
+  watch: {
+    replyPopupShow() {
+      console.log(this.key);
+      this.key++;
+    },
+  },
   mixins: [commentList],
   computed: {
     ...mapState(['uid', 'userInfo']),
@@ -168,14 +180,11 @@ export default {
     //  点击评论
     openReply(item, index) {
       this.replyPopupShow = true;
-
-      // console.log(item, index);
       this.replyInfo = { ...item, index };
     },
     ...articleMethods,
     //发布评论
     submit() {
-      // this.replyInfo.reply_num += 1;
       let { content, uid: user_id, article_id, comment_type, reply_comment_id } = this;
       content = content.trim();
       if (typeof content != 'string' || content.length === 0) {
@@ -190,7 +199,6 @@ export default {
             this.commentPopupShow = false;
             this.content = '';
             this.article.comment++;
-            // this.replyInfo.reply_num + 1;
 
             //老方法刷新评论
             //  this.skip = 0;
@@ -219,32 +227,32 @@ export default {
               };
               this.commentList.unshift(newCommentData);
             } else {
-              this.replyInfo.reply_num++;
-              this.replyPopupShow = true;
+              //   this.replyPopupShow = true;
+              this.commentList[this.reply_active_index].reply_num++;
+              this.openReply(this.commentList[this.reply_active_index], this.reply_active_index);
             }
+            this.key++;
           }
         })
         .catch((err) => {});
     },
-    PopupShow(comment_type = 0, reply_placeholder, reply_comment_id, item, index) {
+    PopupShow(comment_type = 0, reply_placeholder, reply_comment_id, index) {
       //弹出弹窗
 
       if (!this.checkLogin()) return;
-
+      this.reply_active_index = index;
       this.comment_type = comment_type;
 
       if (comment_type == 0) {
         this.reply_placeholder = '留下您的精彩评论';
         this.reply_comment_id = '';
       } else {
-        this.replyInfo = item;
-        this.replyInfo.index = index;
         this.reply_placeholder = '回复：' + reply_placeholder;
         this.reply_comment_id = reply_comment_id;
       }
 
       this.commentPopupShow = true;
-      // this.replyInfo = item;
+
       // 数据变动-虚拟dom变动  虚拟dom变动 真实dom变动
 
       //       改数据  统筹 先变动虚拟dom
@@ -267,168 +275,156 @@ export default {
 </script>
 
 <style scoped lang="less">
-.artice {
-  ::v-deep .van-nav-bar {
-    background-color: #caded554;
-  }
-  ::v-deep .van-nav-bar .van-icon {
-    color: black;
-  }
-  ::v-deep .van-nav-bar__text {
-    color: black;
-  }
-  .article-content {
-    overflow-y: auto;
-    padding-bottom: 50px;
+.article-content {
+  overflow-y: auto;
+  padding-bottom: 50px;
 
-    .title {
-      text-align: center;
-      overflow: hidden;
-      // text-overflow: ellipsis;
-      /*css代码：*/
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 5; /*行数*/
-      -webkit-box-orient: vertical;
-      max-height: 115px;
-      font-size: 20px;
-      color: #3a3a3a;
-      padding: 24px 20px 18px;
-      background-color: #fff;
-      margin: 0;
-    }
+  .title {
+    text-align: center;
+    overflow: hidden;
+    // text-overflow: ellipsis;
+    /*css代码：*/
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5; /*行数*/
+    -webkit-box-orient: vertical;
+    max-height: 115px;
+    font-size: 20px;
+    color: #3a3a3a;
+    padding: 24px 20px 18px;
+    background-color: #fff;
+    margin: 0;
   }
+}
 
-  .user-info {
-    .avatar {
-      width: 35px;
-      height: 35px;
-      margin-right: 8px;
-    }
-    .name {
-      font-size: 12px;
-      color: #333333;
-    }
-    .pubdate {
+.user-info {
+  .avatar {
+    width: 35px;
+    height: 35px;
+    margin-right: 8px;
+  }
+  .name {
+    font-size: 12px;
+    color: #333333;
+  }
+  .pubdate {
+    font-size: 11px;
+    color: #b4b4b4;
+  }
+  .follow-btn {
+    width: 85px;
+    height: 29px;
+  }
+}
+
+ul {
+  list-style: unset;
+}
+
+.markdown-body {
+  padding: 14px;
+  background-color: #fff;
+}
+.section-title2 {
+  padding: 10px;
+  font-size: 24px;
+  color: #222222;
+}
+.article-bottom {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-sizing: border-box;
+  height: 44px;
+  border-top: 1px solid #d8d8d8;
+  background-color: #fff;
+  .comment-btn {
+    width: 141px;
+    height: 23px;
+    border: 1px solid #eeeeee;
+    font-size: 15px;
+    line-height: 23px;
+    color: #a7a7a7;
+  }
+  .van-icon {
+    font-size: 20px;
+    .van-info {
       font-size: 11px;
-      color: #b4b4b4;
-    }
-    .follow-btn {
-      width: 85px;
-      height: 29px;
+      background-color: #e22829;
     }
   }
-
-  ul {
-    list-style: unset;
+}
+.comment-item {
+  .avatar {
+    width: 36px;
+    height: 36px;
+    margin-right: 13px;
   }
-
-  .markdown-body {
-    padding: 14px;
-    word-break: break-all;
-    background-color: #fff;
+  .name {
+    font-size: 16px;
+    color: #555;
   }
-  .section-title2 {
-    padding: 10px;
-    font-size: 24px;
+  .content {
+    font-size: 16px;
     color: #222222;
+    margin: 10px 0;
   }
-  .article-bottom {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
+  .info {
     display: flex;
-    justify-content: space-around;
+    height: 36px;
     align-items: center;
-    box-sizing: border-box;
-    height: 44px;
-    border-top: 1px solid #d8d8d8;
-    background-color: #fff;
-    .comment-btn {
-      width: 141px;
-      height: 23px;
-      border: 1px solid #eeeeee;
-      font-size: 15px;
-      line-height: 23px;
-      color: #a7a7a7;
-    }
-    .van-icon {
-      font-size: 20px;
-      .van-info {
-        font-size: 11px;
-        background-color: #e22829;
-      }
-    }
   }
-  .comment-item {
-    .avatar {
-      width: 36px;
-      height: 36px;
-      margin-right: 13px;
-    }
-    .name {
-      font-size: 16px;
-      color: #555;
-    }
-    .content {
-      font-size: 16px;
-      color: #222222;
-      margin: 10px 0;
-    }
-    .info {
-      display: flex;
-      height: 36px;
-      align-items: center;
-    }
-    .pubdate {
-      font-size: 12px;
-      margin-right: 12px;
-    }
-    .title-w {
-      display: flex;
-      justify-content: space-between;
-      height: 36px;
-      align-items: center;
-    }
-    .like-w {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .like-icon.liked {
-      color: #ef092c;
-    }
+  .pubdate {
+    font-size: 12px;
+    margin-right: 12px;
   }
+  .title-w {
+    display: flex;
+    justify-content: space-between;
+    height: 36px;
+    align-items: center;
+  }
+  .like-w {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .like-icon.liked {
+    color: #ef092c;
+  }
+}
 
-  .article-bottom {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    box-sizing: border-box;
-    height: 44px;
-    border-top: 1px solid #d8d8d8;
-    background-color: #fff;
-    .comment-btn {
-      width: 200px;
-      height: 30px;
-      border: 1px solid #eeeeee;
-      font-size: 15px;
-      line-height: 23px;
-      color: #a7a7a7;
-    }
+.article-bottom {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-sizing: border-box;
+  height: 44px;
+  border-top: 1px solid #d8d8d8;
+  background-color: #fff;
+  .comment-btn {
+    width: 200px;
+    height: 30px;
+    border: 1px solid #eeeeee;
+    font-size: 15px;
+    line-height: 23px;
+    color: #a7a7a7;
   }
+}
 
-  .post-comment {
-    padding: 14px;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-  }
+.post-comment {
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 </style>

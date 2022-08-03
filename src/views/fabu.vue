@@ -138,17 +138,21 @@ export default {
         imageSrc,
       }).then((res) => {
         console.log(res);
+        this.$toast(res.msg);
       });
     },
   },
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .fabu {
-  .van-nav-bar__content {
-    background-color: #07c160;
+  ::v-deep .van-nav-bar {
+    background-color: #3288de;
   }
+  // .van-nav-bar__content {
+  //   background-color: #07c160;
+  // }
 }
 </style>
 >

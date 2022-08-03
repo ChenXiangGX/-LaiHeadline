@@ -32,9 +32,7 @@
         />
       </van-popup>
       <div style="margin: 30px 50px">
-        <van-button round block type="primary" size="normal" :square="true" native-type="submit" @click="submit"
-          >确定</van-button
-        >
+        <van-button round block type="primary" size="normal" native-type="submit" @click="submit">确定</van-button>
       </div>
     </div>
   </div>
@@ -86,6 +84,7 @@ export default {
     //掉接口修改信息
     async submit() {
       let { _id, nickname, avatar, file, sex, birthday } = this.userInfo;
+      // console.log(file instanceof Object);
       if (file) {
         //证明我们上传头像
         let fileList = [
@@ -204,7 +203,10 @@ export default {
 <style scoped lang="less">
 .edit {
   .van-nav-bar {
-    background-color: #07c160;
+    background-color: #3288de;
+  }
+  ::v-deep .van-nav-bar .van-icon {
+    color: black;
   }
 }
 </style>

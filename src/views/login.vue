@@ -52,11 +52,12 @@ export default {
           // console.log(res);
 
           if (res.code == 0) {
-            let { token } = res;
+            let { token, tokenExpired } = res;
             localStorage.setItem('username', res.username);
             localStorage.setItem('uid', res.uid);
             localStorage.setItem('token', res.token);
             localStorage.setItem('userInfo', JSON.stringify(res.userInfo));
+            localStorage.setItem('tokenExpired', tokenExpired);
             // 存到vuex
             // let { token, userInfo, uid } = res;
             // this.$store.commit("change", { key: "token", value: token });
