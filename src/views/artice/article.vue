@@ -158,7 +158,7 @@ export default {
   computed: {
     ...mapState(['uid', 'userInfo']),
   },
-  created() {
+  mouted() {
     let { title, article_id } = this.$route.query;
     this.title = title;
     this.article_id = article_id;
