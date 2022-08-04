@@ -8,7 +8,7 @@
     <!--list 这里会出现一直加载评论，原因可能是加载太靠前了, 先关掉:immediate-check="false" 废弃 -->
     <!-- :style="{ height: 'calc(' + windowHeight + ' - 100px)' }" 解决双滚动条 -->
     <div class="container">
-      <div class="article-content" :style="{ height: 'calc(' + windowHeight + ' - 100px)' }">
+      <div class="article-content">
         <h1 class="title">{{ article.title || title }}</h1>
         <!-- <van-skeleton title avatar :row="3" :loading="!article.title"> -->
         <van-cell center class="user-info">
@@ -163,7 +163,7 @@ export default {
     this.title = title;
     this.article_id = article_id;
     this.getArticleDetail();
-    console.log(windowHeight);
+    // console.log(windowHeight);
   },
   methods: {
     //  点击评论
