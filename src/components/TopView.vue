@@ -1,7 +1,7 @@
 <template>
   <van-nav-bar fixed placeholder>
     <template #title>
-      <router-link to="/search" class="home-header-serch">
+      <router-link to="/search" id="home-header-serch">
         <van-icon name="search" size="18" />
         搜索
       </router-link>
@@ -19,16 +19,14 @@ export default {};
 .van-nav-bar {
   // z-index: 5;
   // background-color: #00a95e;
-  .home-header-serch {
+  #home-header-serch {
     display: flex;
-    display: inline-block;
-    line-height: 8vw;
     justify-content: center;
     align-items: center;
     height: 30px;
     width: 210px;
     color: #fff;
-    background-color: #caded554 !important;
+    background-color: #caded554;
     border-radius: 14px;
   }
 }
