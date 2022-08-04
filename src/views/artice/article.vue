@@ -163,6 +163,7 @@ export default {
     this.title = title;
     this.article_id = article_id;
     this.getArticleDetail();
+    console.log(windowHeight);
   },
   methods: {
     //  点击评论

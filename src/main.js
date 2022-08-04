@@ -18,10 +18,10 @@ import '@/components/vant';
 // Vue.prototype.$http = axios;
 
 //为了解决评论列表下拉加载
-let windowHeight = document.documentElement.scrollHeight;
+let windowHeight = document.documentElement.offsetHeight;
 //定义全局的颜色变量  less里的只能在css里使用
 //vue的混入
-
+console.log(windowHeight);
 import mixin from '@/comon/mixins'; // 全局混入
 Vue.mixin(mixin);
 Vue.mixin({
