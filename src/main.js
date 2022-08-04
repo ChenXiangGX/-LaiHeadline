@@ -3,10 +3,11 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 
-import VConsole from 'vconsole';
-const vConsole = new VConsole();
-Vue.use(vConsole);
-console.info('vconsole-info-测试');
+//vconsoloe
+// import VConsole from 'vconsole';
+// const vConsole = new VConsole();
+// Vue.use(vConsole);
+// console.info('vconsole-info-测试');
 
 // import axios from "axios";
 Vue.config.productionTip = false;

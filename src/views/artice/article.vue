@@ -10,17 +10,19 @@
     <div class="container">
       <div class="article-content">
         <h1 class="title">{{ article.title || title }}</h1>
-        <!-- <van-skeleton title avatar :row="3" :loading="!article.title"> -->
-        <van-cell center class="user-info">
-          <div slot="title" class="name">{{ article.author }}</div>
-          <van-image slot="icon" class="avatar" round fit="cover" :src="article.avatar" />
-          <div slot="label" class="pubdate">{{ article.time }}</div>
-          <!-- <van-button class="follow-btn" type="default" icon="plus" round size="small">已关注</van-button> -->
-        </van-cell>
-        <div class="markdown-body">
-          {{ article.content }}
-        </div>
-        <!-- </van-skeleton> -->
+        <van-skeleton title avatar :row="3" :loading="!article.title">
+          <div ref="renderContent">
+            <van-cell center class="user-info">
+              <div slot="title" class="name">{{ article.author }}</div>
+              <van-image slot="icon" class="avatar" round fit="cover" :src="article.avatar" />
+              <div slot="label" class="pubdate">{{ article.time }}</div>
+              <!-- <van-button class="follow-btn" type="default" icon="plus" round size="small">已关注</van-button> -->
+            </van-cell>
+            <div class="markdown-body">
+              {{ article.content }}
+            </div>
+          </div>
+        </van-skeleton>
         <van-divider :style="{ borderColor: '#999' }"> </van-divider>
         <div class="section-title2">热门评论</div>
         <!-- 文章评论列表这里套div是因为下拉加载位置没找准导致的 所以添加div增加样式-->
@@ -72,7 +74,7 @@
       <van-icon v-else :badge="article.comment" name="comment-o" color="#777" />
       <van-icon name="star" @click="togglefav" :color="article.is_fav ? '#f00' : '#777'" />
       <van-icon @click="toggleLike" :color="article.is_like ? '#f00' : '#777'" name="good-job" />
-      <van-icon name="share" color="#777777"></van-icon>
+      <van-icon name="share" @click="showShare = true" color="#777777"></van-icon>
     </div>
     <!-- 评论回复 -->
 
@@ -105,11 +107,25 @@
         :commentList="commentList"
       ></replyCom>
     </van-popup>
+
+    <van-share-sheet v-model="showShare" title="立即分享给好友" :options="options" @select="onSelect" />
+    <van-popup v-model="qrcodePopup" round>
+      <p
+        :style="{
+          textAlign: 'center',
+          margin: '10px 0 0 0',
+        }"
+      >
+        打开微信/浏览器扫一扫
+      </p>
+      <van-image :src="qrcodeURL"></van-image>
+    </van-popup>
   </div>
 </template>
 
 <script>
 import { Image as VanImage } from 'vant';
+import { ShareSheet } from 'vant';
 
 import articleMethods from './articleMethods';
 import commentList from './commentminxin';
@@ -119,7 +135,8 @@ import { Skeleton } from 'vant';
 import { addComment } from '@/api/home';
 import replyCom from './replyCom.vue';
 import '@/comon/utils/github-markdown.css';
-
+import QRCode from 'qrcode';
+import html2canvas from 'html2canvas';
 export default {
   data() {
     return {
@@ -136,6 +153,18 @@ export default {
       reply_comment_id: '', //  回复的id  这个数据作为中转
       replyPopupShow: false, //  回复的 弹出层
       replyInfo: {},
+
+      showShare: false,
+      options: [
+        { name: '微信', icon: 'wechat' },
+        { name: 'QQ', icon: 'qq' },
+        { name: '微博', icon: 'weibo' },
+        { name: '复制链接', icon: 'link' },
+        { name: '分享海报', icon: 'poster' },
+        { name: '二维码', icon: 'qrcode' },
+      ],
+      qrcodePopup: false,
+      qrcodeURL: '',
     };
   },
   filters: {
@@ -166,7 +195,72 @@ export default {
     // console.log(windowHeight);
   },
   methods: {
-    //  点击评论
+    //分享
+    onSelect({ name }) {
+      let title = this.article.title;
+      let href = window.location.href;
+      switch (name) {
+        case 'QQ':
+          window.location.href = `http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?title=${title}&href=${href}&content=${title}`;
+
+          break;
+        case '微博':
+          window.location.href = `http://service.weibo.com/share/share.php?appkey=583395093&title=${title}&url=${window.location.href}&source=bshare&retcode=0&ralateUid=新浪微博`;
+
+          break;
+        case '复制链接':
+          let input = document.createElement('input');
+
+          input.value = href;
+          document.body.appendChild(input);
+          input.select();
+
+          document.execCommand('Copy');
+
+          document.body.removeChild(input);
+
+        case '二维码':
+        case '微信':
+          //
+
+          QRCode.toDataURL(href)
+            .then((url) => {
+              console.log(url);
+              this.qrcodeURL = url;
+              this.qrcodePopup = true;
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+
+          break;
+
+        case '分享海报':
+          //useCORS: true可以抓取截不到的头像
+          html2canvas(this.$refs.renderContent, { useCORS: true }).then((canvas) => {
+            document.body.appendChild(canvas);
+            // console.log(canvas);
+            let url = canvas.toDataURL();
+
+            // console.log(url);
+
+            // 生成一个a元素
+            var a = document.createElement('a');
+            // 创建一个单击事件
+            var event = new MouseEvent('click');
+
+            // 将a的download属性设置为我们想要下载的图片名称，若name不存在则使用‘下载图片名称’作为默认名称
+            a.download = name || '下载图片名称';
+            // 将生成的URL设置为a.href属性
+            a.href = url;
+
+            // 触发a的单击事件
+            a.dispatchEvent(event);
+          });
+
+          break;
+      }
+    }, //  点击评论
     openReply(item, index) {
       this.replyPopupShow = true;
 
@@ -263,7 +357,13 @@ export default {
     //
   },
 
-  components: { replyCom, [VanImage.name]: VanImage, [Skeleton.name]: Skeleton, [Divider.name]: Divider },
+  components: {
+    replyCom,
+    [VanImage.name]: VanImage,
+    [Skeleton.name]: Skeleton,
+    [Divider.name]: Divider,
+    [ShareSheet.name]: ShareSheet,
+  },
 };
 </script>
 
