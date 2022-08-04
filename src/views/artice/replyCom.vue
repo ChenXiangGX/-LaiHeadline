@@ -202,7 +202,7 @@ export default {
   border: none;
 }
 ::v-deep .van-nav-bar {
-  background-color: pink;
+  background-color: #3288de;
 
   border-radius: 10px 10px 0 0;
 }
