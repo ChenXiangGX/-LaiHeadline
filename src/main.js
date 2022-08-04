@@ -28,7 +28,7 @@ Vue.mixin({
   data() {
     return {
       basegreen: 'red',
-      windowHeight: windowHeight + 'px',
+      // windowHeight: windowHeight + 'px',
     };
   },
   methods: {
