@@ -1,10 +1,10 @@
-let windowHeight = document.documentElement.scrollHeight;
+// let windowHeight = document.documentElement.scrollHeight;
 
 export default {
   data() {
     return {
       baseColor: '#07c160',
-      windowHeight: windowHeight + 'px',
+      // windowHeight: windowHeight + 'px',
     };
   },
   filters: {
