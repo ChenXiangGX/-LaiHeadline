@@ -10,17 +10,17 @@
     <div class="container">
       <div class="article-content" :style="{ height: 'calc(' + windowHeight + ' - 100px)' }">
         <h1 class="title">{{ article.title || title }}</h1>
-        <van-skeleton title avatar :row="3" :loading="!article.title">
-          <van-cell center class="user-info">
-            <div slot="title" class="name">{{ article.author }}</div>
-            <van-image slot="icon" class="avatar" round fit="cover" :src="article.avatar" />
-            <div slot="label" class="pubdate">{{ article.time }}</div>
-            <!-- <van-button class="follow-btn" type="default" icon="plus" round size="small">已关注</van-button> -->
-          </van-cell>
-          <div class="markdown-body">
-            {{ article.content }}
-          </div>
-        </van-skeleton>
+        <!-- <van-skeleton title avatar :row="3" :loading="!article.title"> -->
+        <van-cell center class="user-info">
+          <div slot="title" class="name">{{ article.author }}</div>
+          <van-image slot="icon" class="avatar" round fit="cover" :src="article.avatar" />
+          <div slot="label" class="pubdate">{{ article.time }}</div>
+          <!-- <van-button class="follow-btn" type="default" icon="plus" round size="small">已关注</van-button> -->
+        </van-cell>
+        <div class="markdown-body">
+          {{ article.content }}
+        </div>
+        <!-- </van-skeleton> -->
         <van-divider :style="{ borderColor: '#999' }"> </van-divider>
         <div class="section-title2">热门评论</div>
         <!-- 文章评论列表这里套div是因为下拉加载位置没找准导致的 所以添加div增加样式-->

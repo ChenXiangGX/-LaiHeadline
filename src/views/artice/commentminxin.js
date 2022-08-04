@@ -24,6 +24,7 @@ export default {
       })
         .then((res) => {
           if (res.code == 0) {
+            console.log(res.data);
             this.commentList.push(...res.data);
             let len = this.commentList.length;
             if (len >= res.count) {
