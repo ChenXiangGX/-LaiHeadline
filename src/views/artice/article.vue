@@ -260,6 +260,9 @@ export default {
             // 触发a的单击事件
             a.dispatchEvent(event);
             document.body.removeChild(a);
+
+            let can = document.querySelector('canvas');
+            document.body.removeChild(can);
           });
 
           break;

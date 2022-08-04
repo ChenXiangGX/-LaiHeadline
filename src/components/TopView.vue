@@ -21,12 +21,14 @@ export default {};
   // background-color: #00a95e;
   .home-header-serch {
     display: flex;
+    display: inline-block;
+    line-height: 8vw;
     justify-content: center;
     align-items: center;
     height: 30px;
     width: 210px;
     color: #fff;
-    background-color: #caded554;
+    background-color: #caded554 !important;
     border-radius: 14px;
   }
 }
