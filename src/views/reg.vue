@@ -59,16 +59,16 @@
   </div>
 </template>
 <script>
-import { reg, sendSms } from "@/api/home.js";
+import { reg, sendSms } from '@/api/home.js';
 
 export default {
   data() {
     return {
-      username: "",
-      password: "",
-      vercode: "",
+      username: '',
+      password: '',
+      vercode: '',
       codeBtnDisabled: false,
-      code_text: "发送验证码",
+      code_text: '发送验证码',
       codeBtnLoading: false,
     };
   },
@@ -82,19 +82,19 @@ export default {
       reg(values)
         .then((res) => {
           console.log(res);
-          this.$router.push("/login");
+          this.$router.push('/login');
         })
         .catch((err) => {});
     },
     //发送验证码
     async sendSms() {
-      let validate_res = await this.$refs.regForm.validate("username");
+      let validate_res = await this.$refs.regForm.validate('username');
       this.codeBtnDisabled = true;
-      this.code_text = "发送中...";
+      this.code_text = '发送中...';
       this.codeBtnLoading = true;
       sendSms({
         mobile: this.username,
-        type: "register",
+        type: 'register',
       })
         .then((res) => {
           console.log(res);
@@ -108,32 +108,26 @@ export default {
               if (count == 0) {
                 clearInterval(timer);
                 this.codeBtnDisabled = false;
-                this.code_text = "再次发送";
+                this.code_text = '再次发送';
                 this.codeBtnLoading = false;
                 count = 10;
               }
             }, 1000);
           } else {
-            this.$toast(res.msg || "发送失败");
+            this.$toast(res.msg || '发送失败');
             this.codeBtnDisabled = false;
-            this.code_text = "再次发送";
+            this.code_text = '再次发送';
             this.codeBtnLoading = false;
           }
         })
         .catch((err) => {
-          this.$toast(err.msg || "发送失败");
+          this.$toast(err.msg || '发送失败');
           this.codeBtnDisabled = false;
-          this.code_text = "再次发送";
+          this.code_text = '再次发送';
           this.codeBtnLoading = false;
         });
     },
   },
 };
 </script>
-<style lang="less">
-.reg {
-  .van-nav-bar__content {
-    background-color: #07c160;
-  }
-}
-</style>
+<style lang="less"></style>

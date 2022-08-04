@@ -85,9 +85,6 @@ export default {
 
 <style lang="less">
 .login {
-  .van-nav-bar__content {
-    background-color: #07c160;
-  }
   .mima_r {
     a {
       color: #1989fa;

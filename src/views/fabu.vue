@@ -148,7 +148,7 @@ export default {
 <style lang="less" scoped>
 .fabu {
   ::v-deep .van-nav-bar {
-    background-color: #3288de;
+    // background-color: #3288de;
   }
   // .van-nav-bar__content {
   //   background-color: #07c160;

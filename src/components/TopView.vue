@@ -17,8 +17,8 @@ export default {};
 </script>
 <style lang="less">
 .van-nav-bar {
-  z-index: 5;
-  background-color: #00a95e;
+  // z-index: 5;
+  // background-color: #00a95e;
   .home-header-serch {
     display: flex;
     justify-content: center;
@@ -26,7 +26,7 @@ export default {};
     height: 30px;
     width: 210px;
     color: #fff;
-    background-color: #77d3aa;
+    // background-color: #77d3aa;
     border-radius: 14px;
   }
 }
