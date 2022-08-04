@@ -26,7 +26,7 @@ export default {};
     height: 30px;
     width: 210px;
     color: #fff;
-    // background-color: #77d3aa;
+    background-color: #caded554;
     border-radius: 14px;
   }
 }

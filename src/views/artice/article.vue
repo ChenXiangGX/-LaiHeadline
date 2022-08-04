@@ -219,7 +219,7 @@ export default {
 
           document.body.removeChild(input);
           this.$toast('复制成功');
-
+          break;
         case '二维码':
         case '微信':
           //
