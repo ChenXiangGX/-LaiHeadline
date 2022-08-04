@@ -195,6 +195,25 @@ export default {
     // console.log(windowHeight);
   },
   methods: {
+    //
+
+    base64ToBlob(code) {
+      let parts = code.split(';base64,');
+
+      let contentType = parts[0].split(':')[1];
+
+      let raw = window.atob(parts[1]);
+
+      let rawLength = raw.length;
+
+      let uInt8Array = new Uint8Array(rawLength);
+
+      for (let i = 0; i < rawLength; ++i) {
+        uInt8Array[i] = raw.charCodeAt(i);
+      }
+
+      return new Blob([uInt8Array], { type: contentType });
+    },
     //分享
     onSelect({ name }) {
       let title = this.article.title;
@@ -236,29 +255,50 @@ export default {
           break;
 
         case '分享海报':
-          //useCORS: true可以抓取截不到的头像
+          // 具体调用的方法
+
           html2canvas(this.$refs.renderContent, { useCORS: true }).then((canvas) => {
             document.body.appendChild(canvas);
             // console.log(canvas);
-            let url = canvas.toDataURL();
+            let saveUrl = canvas.toDataURL();
+            let aLink = document.createElement('a');
 
-            // console.log(url);
+            let blob = this.base64ToBlob(saveUrl);
 
-            // 生成一个a元素
-            var a = document.createElement('a');
-            // 创建一个单击事件
-            var event = new MouseEvent('click');
+            let evt = document.createEvent('HTMLEvents');
 
-            // 将a的download属性设置为我们想要下载的图片名称，若name不存在则使用‘下载图片名称’作为默认名称
-            a.download = name || '下载图片名称';
-            // 将生成的URL设置为a.href属性
-            a.href = url;
+            evt.initEvent('click', true, true);
 
-            // 触发a的单击事件
-            a.dispatchEvent(event);
+            aLink.download = '标题.jpg';
+
+            aLink.href = URL.createObjectURL(blob);
+
+            aLink.click();
           });
 
-          break;
+        //useCORS: true可以抓取截不到的头像
+        // html2canvas(this.$refs.renderContent, { useCORS: true }).then((canvas) => {
+        //   document.body.appendChild(canvas);
+        //   // console.log(canvas);
+        //   let url = canvas.toDataURL();
+
+        //   // console.log(url);
+
+        //   // 生成一个a元素
+        //   var a = document.createElement('a');
+        //   // 创建一个单击事件
+        //   var event = new MouseEvent('click');
+
+        //   // 将a的download属性设置为我们想要下载的图片名称，若name不存在则使用‘下载图片名称’作为默认名称
+        //   a.download = name || '下载图片名称';
+        //   // 将生成的URL设置为a.href属性
+        //   a.href = url;
+
+        //   // 触发a的单击事件
+        //   a.dispatchEvent(event);
+        // });
+
+        // break;
       }
     }, //  点击评论
     openReply(item, index) {
