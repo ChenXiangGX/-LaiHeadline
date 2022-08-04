@@ -239,7 +239,7 @@ export default {
 .Home {
   width: 375px;
   ::v-deep .van-nav-bar .home-header-serch {
-    background-color: #caded554;
+    background-color: #caded554 !important;
   }
   ::v-deep .van-nav-bar {
     background-color: #50657a;

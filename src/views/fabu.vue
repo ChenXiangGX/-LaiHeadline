@@ -153,6 +153,9 @@ export default {
   // .van-nav-bar__content {
   //   background-color: #07c160;
   // }
+  ::v-deep .van-field__label {
+    min-width: 45px !important;
+  }
 }
 </style>
 >
