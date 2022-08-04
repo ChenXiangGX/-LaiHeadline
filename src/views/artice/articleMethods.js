@@ -3,12 +3,13 @@ import { getArticleDetail, remove_fav, add_fav, unlike, like, comment_like, comm
 export default {
   //文章详情
   getArticleDetail() {
-    // console.log(this);
+    console.log(this);
     let { article_id, uid: user_id } = this;
 
     getArticleDetail({ article_id, user_id }).then((res) => {
       // console.log(res);
       if (res.code == 0) {
+        console.log(res);
         res.data.time = formDate(res.data.time);
         this.article = res.data;
         //为了解决下拉加载问题
